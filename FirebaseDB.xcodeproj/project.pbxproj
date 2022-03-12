@@ -20,6 +20,9 @@
 		6B2D748D27DBA1ED00A4136A /* FirebaseDatabase in Frameworks */ = {isa = PBXBuildFile; productRef = 6B2D748C27DBA1ED00A4136A /* FirebaseDatabase */; };
 		6B2D748F27DBA1ED00A4136A /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = 6B2D748E27DBA1ED00A4136A /* FirebaseFirestore */; };
 		6B2D749127DBA1ED00A4136A /* FirebaseStorage in Frameworks */ = {isa = PBXBuildFile; productRef = 6B2D749027DBA1ED00A4136A /* FirebaseStorage */; };
+		6B2D749327DBB1F000A4136A /* UILabel+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2D749227DBB1F000A4136A /* UILabel+.swift */; };
+		6B2D749527DBB20B00A4136A /* UITextField+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2D749427DBB20B00A4136A /* UITextField+.swift */; };
+		6B2D749727DBB22000A4136A /* UITextView+.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B2D749627DBB22000A4136A /* UITextView+.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -31,6 +34,9 @@
 		6B2D747727DBA04700A4136A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6B2D747927DBA04700A4136A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6B2D748927DBA12000A4136A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		6B2D749227DBB1F000A4136A /* UILabel+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UILabel+.swift"; sourceTree = "<group>"; };
+		6B2D749427DBB20B00A4136A /* UITextField+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextField+.swift"; sourceTree = "<group>"; };
+		6B2D749627DBB22000A4136A /* UITextView+.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,13 +78,32 @@
 			children = (
 				6B2D746B27DBA04500A4136A /* AppDelegate.swift */,
 				6B2D746D27DBA04500A4136A /* SceneDelegate.swift */,
-				6B2D746F27DBA04500A4136A /* UploadViewController.swift */,
+				6B2D749827DBB22F00A4136A /* Extensions */,
+				6B2D749927DBB23600A4136A /* Scenes */,
 				6B2D747427DBA04700A4136A /* Assets.xcassets */,
 				6B2D747627DBA04700A4136A /* LaunchScreen.storyboard */,
 				6B2D747927DBA04700A4136A /* Info.plist */,
 				6B2D748927DBA12000A4136A /* GoogleService-Info.plist */,
 			);
 			path = FirebaseDB;
+			sourceTree = "<group>";
+		};
+		6B2D749827DBB22F00A4136A /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				6B2D749227DBB1F000A4136A /* UILabel+.swift */,
+				6B2D749427DBB20B00A4136A /* UITextField+.swift */,
+				6B2D749627DBB22000A4136A /* UITextView+.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		6B2D749927DBB23600A4136A /* Scenes */ = {
+			isa = PBXGroup;
+			children = (
+				6B2D746F27DBA04500A4136A /* UploadViewController.swift */,
+			);
+			path = Scenes;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -167,7 +192,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				6B2D747027DBA04500A4136A /* UploadViewController.swift in Sources */,
+				6B2D749727DBB22000A4136A /* UITextView+.swift in Sources */,
+				6B2D749527DBB20B00A4136A /* UITextField+.swift in Sources */,
 				6B2D746C27DBA04500A4136A /* AppDelegate.swift in Sources */,
+				6B2D749327DBB1F000A4136A /* UILabel+.swift in Sources */,
 				6B2D746E27DBA04500A4136A /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
