@@ -12,6 +12,9 @@ import RxCocoa
 
 class UploadViewController: UIViewController {
     
+    let disposeBag = DisposeBag()
+    let uploadViewModel = UploadViewModel()
+    
     private let scrollView = UIScrollView()
     private let contentView = UIView()
     
@@ -32,6 +35,23 @@ class UploadViewController: UIViewController {
         super.viewDidLoad()
         setupAttribute()
         setupLayout()
+        bind(viewModel: uploadViewModel)
+    }
+    
+    func bind(viewModel: UploadViewModel) {
+        Observable
+            .combineLatest(nameTextField.rx.text.orEmpty, priceTextField.rx.text.orEmpty, countStepper.rx.value, descriptionTextView.rx.text.orEmpty)
+            .map { (name: $0, price: $1, count: Int($2), description: $3) }
+            .bind(to: viewModel.itemInfoInput)
+            .disposed(by: disposeBag)
+        countStepper.rx.value.changed
+            .map { String(Int($0)) + "개" }
+            .bind(to: currentCountLabel.rx.text)
+            .disposed(by: disposeBag)
+        uploadBarButton.rx.tap
+            .throttle(.seconds(3), scheduler: MainScheduler.instance)
+            .bind(to: viewModel.didTapUploadBarButton)
+            .disposed(by: disposeBag)
     }
 }
 
@@ -57,6 +77,7 @@ private extension UploadViewController {
         currentCountLabel.font = .systemFont(ofSize: 14.0, weight: .regular)
         currentCountLabel.text = "1개"
         countStepper.value = 1
+        countStepper.minimumValue = 1
         descriptionTextView.defaultStyle()
     }
     func setupLayout() {
@@ -130,7 +151,7 @@ private extension UploadViewController {
         descriptionTextView.snp.makeConstraints {
             $0.top.equalTo(descriptionLabel.snp.bottom).offset(commonInset/2)
             $0.leading.trailing.equalToSuperview().inset(commonInset)
-            $0.bottom.equalToSuperview()
+            $0.bottom.equalToSuperview().inset(commonInset)
         }
     }
 }
