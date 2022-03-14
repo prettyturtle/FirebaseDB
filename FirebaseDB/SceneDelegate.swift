@@ -18,8 +18,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: windowScene)
         window?.backgroundColor = .systemBackground
         window?.tintColor = .systemPink
-        let rootViewController = UploadViewController()
-        window?.rootViewController = UINavigationController(rootViewController: rootViewController)
+        let rootViewController = TabBarController()
+        window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
     }
 
