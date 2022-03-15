@@ -10,12 +10,37 @@ import Firebase
 import RxSwift
 
 struct FirestoreManager {
+    enum CollectionType: String {
+        case upload = "UploadedItems"
+        
+        var name: String { self.rawValue }
+    }
     private let db = Firestore.firestore()
+    
+    func uploadItem(item: Item) {
+        let data = [
+            "id": item.id,
+            "name": item.name,
+            "price": item.price,
+            "count": item.count,
+            "description": item.description
+        ] as [String : Any]
+        
+        db.collection(CollectionType.upload.name)
+            .document(item.id)
+            .setData(data) { error in
+                if let error = error {
+                    print("FirestoreManager - uploadItem - ERROR: \(error.localizedDescription)")
+                } else {
+                    print("상품 업로드 성공!!")
+                }
+            }
+    }
     
     func getAllItemList() -> BehaviorSubject<[Item]> {
         var itemList = [Item]()
         let itemListSubject = BehaviorSubject<[Item]>(value: [])
-        db.collection("UploadedItems")
+        db.collection(CollectionType.upload.name)
             .getDocuments { snapshot, error in
                 if let error = error {
                     print("FirestoreManager-getAllItemList-ERROR: \(error)")

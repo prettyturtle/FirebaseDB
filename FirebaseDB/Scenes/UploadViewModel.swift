@@ -12,7 +12,7 @@ import Firebase
 
 class UploadViewModel {
     let disposeBag = DisposeBag()
-    let db = Firestore.firestore()
+    let FIRManager = FirestoreManager()
     
     let itemInfoInput = BehaviorSubject<(
         name: String,
@@ -31,29 +31,9 @@ class UploadViewModel {
         didTapUploadBarButton
             .withLatestFrom(itemInfoInput)
             .map { Item(name: $0, price: $1, count: $2, description: $3) }
-            .subscribe(onNext: {
-                self.uploadItem(item: $0)
+            .subscribe(onNext: { [weak self] item in
+                self?.FIRManager.uploadItem(item: item)
             })
             .disposed(by: disposeBag)
-    }
-    
-    func uploadItem(item: Item) {
-        let data = [
-            "id": item.id,
-            "name": item.name,
-            "price": item.price,
-            "count": item.count,
-            "description": item.description
-        ] as [String : Any]
-        
-        db.collection("UploadedItems")
-            .document(item.name + "__" + item.id)
-            .setData(data) { error in
-                if let error = error {
-                    print("UploadViewModel - uploadItem - ERROR: \(error.localizedDescription)")
-                } else {
-                    print("상품 업로드 성공!!!")
-                }
-            }
     }
 }
