@@ -37,9 +37,9 @@ struct FirestoreManager {
             }
     }
     
-    func getAllItemList() -> BehaviorSubject<[Item]> {
+    func getAllItemList() -> PublishSubject<[Item]> {
         var itemList = [Item]()
-        let itemListSubject = BehaviorSubject<[Item]>(value: [])
+        let itemListSubject = PublishSubject<[Item]>()
         db.collection(CollectionType.upload.name)
             .getDocuments { snapshot, error in
                 if let error = error {

@@ -37,6 +37,14 @@ class ItemListViewController: UIViewController {
                 return cell
             }
             .disposed(by: disposeBag)
+        refreshControl.rx.controlEvent(.valueChanged)
+            .bind(to: viewModel.refreshBegin)
+            .disposed(by: disposeBag)
+        viewModel.refreshEnd
+            .subscribe(onNext: { [weak self] _ in
+                self?.refreshControl.endRefreshing()
+            })
+            .disposed(by: disposeBag)
     }
 }
 

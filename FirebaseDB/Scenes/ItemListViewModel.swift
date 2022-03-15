@@ -7,15 +7,29 @@
 
 import Foundation
 import RxSwift
+import RxRelay
 
 class ItemListViewModel {
     
     let disposeBag = DisposeBag()
     let FIRManager = FirestoreManager()
     
-    var itemList: BehaviorSubject<[Item]>
+    let itemList = BehaviorSubject<[Item]>(value: [])
+    let refreshBegin = PublishRelay<Void>()
+    let refreshEnd = PublishRelay<Void>()
     
     init() {
-        itemList = FIRManager.getAllItemList()
+        fetchUploadedItems()
+        
+        refreshBegin.subscribe(onNext: { [weak self] _ in
+            self?.fetchUploadedItems()
+            self?.refreshEnd.accept(())
+        })
+            .disposed(by: disposeBag)
+    }
+    func fetchUploadedItems() {
+        FIRManager.getAllItemList()
+            .bind(to: self.itemList)
+            .disposed(by: disposeBag)
     }
 }
