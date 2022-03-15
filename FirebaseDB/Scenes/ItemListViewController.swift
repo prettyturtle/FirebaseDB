@@ -15,6 +15,7 @@ class ItemListViewController: UIViewController {
     let itemListViewModel = ItemListViewModel()
     
     private let itemTableView = UITableView()
+    private let refreshControl = UIRefreshControl()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,11 +27,13 @@ class ItemListViewController: UIViewController {
     func bind(viewModel: ItemListViewModel) {
         viewModel.itemList
             .bind(to: itemTableView.rx.items) { tv, row, data in
-                let cell = tv.dequeueReusableCell(
-                    withIdentifier: "ItemListTableViewCell",
+                guard let cell = tv.dequeueReusableCell(
+                    withIdentifier: ItemListTableViewCell.identifier,
                     for: IndexPath(row: row, section: 0)
-                )
-                cell.textLabel?.text = data.id
+                ) as? ItemListTableViewCell else { return UITableViewCell() }
+                
+                cell.setupView(item: data)
+                
                 return cell
             }
             .disposed(by: disposeBag)
@@ -39,9 +42,12 @@ class ItemListViewController: UIViewController {
 
 private extension ItemListViewController {
     func setupAttribute() {
+        title = "상품 목록"
+        itemTableView.refreshControl = refreshControl
+        itemTableView.rowHeight = 150.0
         itemTableView.register(
-            UITableViewCell.self,
-            forCellReuseIdentifier: "ItemListTableViewCell"
+            ItemListTableViewCell.self,
+            forCellReuseIdentifier: ItemListTableViewCell.identifier
         )
     }
     func setupLayout() {

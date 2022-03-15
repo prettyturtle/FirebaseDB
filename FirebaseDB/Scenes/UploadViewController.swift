@@ -41,7 +41,7 @@ class UploadViewController: UIViewController {
     func bind(viewModel: UploadViewModel) {
         Observable
             .combineLatest(nameTextField.rx.text.orEmpty, priceTextField.rx.text.orEmpty, countStepper.rx.value, descriptionTextView.rx.text.orEmpty)
-            .map { (name: $0, price: $1, count: Int($2), description: $3) }
+            .map { (name: $0, price: Int($1) ?? 0, count: Int($2), description: $3) }
             .bind(to: viewModel.itemInfoInput)
             .disposed(by: disposeBag)
         countStepper.rx.value.changed

@@ -50,7 +50,7 @@ struct FirestoreManager {
                     for document in snapshot.documents {
                         guard let id = document["id"] as? String,
                               let name = document["name"] as? String,
-                              let price = document["price"] as? String,
+                              let price = document["price"] as? Int,
                               let count = document["count"] as? Int,
                               let description = document["description"] as? String else { return }
                         

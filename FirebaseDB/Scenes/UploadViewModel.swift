@@ -16,12 +16,12 @@ class UploadViewModel {
     
     let itemInfoInput = BehaviorSubject<(
         name: String,
-        price: String,
+        price: Int,
         count: Int,
         description: String
     )>(value: (
         name: "",
-        price: "",
+        price: 0,
         count: 1,
         description: ""
     ))
