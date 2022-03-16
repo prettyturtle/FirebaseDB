@@ -31,6 +31,7 @@
 		6B8FEEB027DCB77400ACA65D /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B8FEEAF27DCB77400ACA65D /* Item.swift */; };
 		6B8FEEB327DCFE9700ACA65D /* TabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B8FEEB227DCFE9700ACA65D /* TabBarController.swift */; };
 		6B8FEEB527DCFF3100ACA65D /* ItemListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6B8FEEB427DCFF3100ACA65D /* ItemListViewController.swift */; };
+		6BBAD4D027E18835004CB1BC /* ItemDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6BBAD4CF27E18835004CB1BC /* ItemDetailViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -53,6 +54,7 @@
 		6B8FEEAF27DCB77400ACA65D /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		6B8FEEB227DCFE9700ACA65D /* TabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarController.swift; sourceTree = "<group>"; };
 		6B8FEEB427DCFF3100ACA65D /* ItemListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemListViewController.swift; sourceTree = "<group>"; };
+		6BBAD4CF27E18835004CB1BC /* ItemDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemDetailViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +135,7 @@
 				6B8FEEAD27DCB0DF00ACA65D /* UploadViewModel.swift */,
 				6B8FEEB427DCFF3100ACA65D /* ItemListViewController.swift */,
 				6B2157CC27DE3E0300278F65 /* ItemListViewModel.swift */,
+				6BBAD4CF27E18835004CB1BC /* ItemDetailViewController.swift */,
 				6B0A397F27E0897900FC6873 /* ItemListTableViewCell.swift */,
 			);
 			path = Scenes;
@@ -236,6 +239,7 @@
 				6B2D747027DBA04500A4136A /* UploadViewController.swift in Sources */,
 				6B2D749727DBB22000A4136A /* UITextView+.swift in Sources */,
 				6B8FEEB327DCFE9700ACA65D /* TabBarController.swift in Sources */,
+				6BBAD4D027E18835004CB1BC /* ItemDetailViewController.swift in Sources */,
 				6B0A398227E09D9F00FC6873 /* Int+.swift in Sources */,
 				6B2D749527DBB20B00A4136A /* UITextField+.swift in Sources */,
 				6B0A398027E0897900FC6873 /* ItemListTableViewCell.swift in Sources */,

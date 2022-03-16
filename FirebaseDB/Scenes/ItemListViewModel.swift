@@ -17,14 +17,24 @@ class ItemListViewModel {
     let itemList = BehaviorSubject<[Item]>(value: [])
     let refreshBegin = PublishRelay<Void>()
     let refreshEnd = PublishRelay<Void>()
+    let selectedRow = PublishRelay<Int>()
+    let moveToDetailVC = PublishSubject<Item>()
     
     init() {
         fetchUploadedItems()
         
-        refreshBegin.subscribe(onNext: { [weak self] _ in
-            self?.fetchUploadedItems()
-            self?.refreshEnd.accept(())
-        })
+        refreshBegin
+            .subscribe(onNext: { [weak self] _ in
+                self?.fetchUploadedItems()
+                self?.refreshEnd.accept(())
+            })
+            .disposed(by: disposeBag)
+        
+        selectedRow
+            .withLatestFrom(itemList) { idx, items in
+                items[idx]
+            }
+            .bind(to: moveToDetailVC)
             .disposed(by: disposeBag)
     }
     func fetchUploadedItems() {

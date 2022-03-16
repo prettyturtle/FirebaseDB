@@ -25,6 +25,14 @@ class ItemListViewController: UIViewController {
     }
     
     func bind(viewModel: ItemListViewModel) {
+        refreshControl.rx.controlEvent(.valueChanged)
+            .bind(to: viewModel.refreshBegin)
+            .disposed(by: disposeBag)
+        itemTableView.rx.itemSelected
+            .map { $0.row }
+            .bind(to: viewModel.selectedRow)
+            .disposed(by: disposeBag)
+        
         viewModel.itemList
             .bind(to: itemTableView.rx.items) { tv, row, data in
                 guard let cell = tv.dequeueReusableCell(
@@ -37,12 +45,16 @@ class ItemListViewController: UIViewController {
                 return cell
             }
             .disposed(by: disposeBag)
-        refreshControl.rx.controlEvent(.valueChanged)
-            .bind(to: viewModel.refreshBegin)
-            .disposed(by: disposeBag)
         viewModel.refreshEnd
             .subscribe(onNext: { [weak self] _ in
                 self?.refreshControl.endRefreshing()
+            })
+            .disposed(by: disposeBag)
+        viewModel.moveToDetailVC
+            .subscribe(onNext: { [weak self] item in
+                let itemDetailVC = ItemDetailViewController()
+                itemDetailVC.item = item
+                self?.show(itemDetailVC, sender: nil)
             })
             .disposed(by: disposeBag)
     }
