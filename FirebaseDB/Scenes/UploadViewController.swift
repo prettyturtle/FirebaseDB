@@ -10,10 +10,18 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
+enum UploadMode {
+    case new
+    case modify
+}
+
 class UploadViewController: UIViewController {
     
     let disposeBag = DisposeBag()
     let uploadViewModel = UploadViewModel()
+    
+    var item: Item?
+    var uploadMode: UploadMode = .new
     
     private let scrollView = UIScrollView()
     private let contentView = UIView()
@@ -35,6 +43,11 @@ class UploadViewController: UIViewController {
         super.viewDidLoad()
         setupAttribute()
         setupLayout()
+        
+        if uploadMode == .modify,
+           let item = item {
+            setupModifyView(item: item)
+        }
         bind(viewModel: uploadViewModel)
     }
     
@@ -50,12 +63,24 @@ class UploadViewController: UIViewController {
             .disposed(by: disposeBag)
         uploadBarButton.rx.tap
             .throttle(.seconds(3), scheduler: MainScheduler.instance)
+            .compactMap { [weak self] _ in self?.uploadMode }
+            .map { [weak self] mode in (mode, self?.item)}
             .bind(to: viewModel.didTapUploadBarButton)
             .disposed(by: disposeBag)
     }
 }
 
 private extension UploadViewController {
+    func setupModifyView(item: Item) {
+        title = "상품 수정"
+        uploadBarButton.title = "수정"
+        
+        nameTextField.text = item.name
+        priceTextField.text = "\(item.price)"
+        countStepper.value = Double(item.count)
+        currentCountLabel.text = "\(item.count)개"
+        descriptionTextView.text = item.description
+    }
     func setupAttribute() {
         title = "상품 등록"
         uploadBarButton.title = "등록"

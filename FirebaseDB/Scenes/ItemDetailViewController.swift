@@ -44,6 +44,12 @@ class ItemDetailViewController: UIViewController {
             .compactMap { [weak self] _ in self?.item }
             .bind(to: viewModel.didTapModifyButton)
             .disposed(by: disposeBag)
+        
+        viewModel.moveToUploadViewController
+            .subscribe(onNext: { [weak self] uploadVC in
+                self?.show(uploadVC, sender: nil)
+            })
+            .disposed(by: disposeBag)
     }
 }
 

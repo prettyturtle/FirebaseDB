@@ -7,19 +7,23 @@
 
 import UIKit
 import RxSwift
+import RxCocoa
 
 class ItemDetailViewModel {
     
     let disposeBag = DisposeBag()
     
     let didTapModifyButton = PublishSubject<Item>()
-    
+    let moveToUploadViewController = PublishSubject<UploadViewController>()
     init() {
         didTapModifyButton
-            .subscribe(onNext: {
-                print($0)
-                // Item Modify
-            })
+            .map { item in
+                let uploadVC = UploadViewController()
+                uploadVC.item = item
+                uploadVC.uploadMode = .modify
+                return uploadVC
+            }
+            .bind(to: moveToUploadViewController)
             .disposed(by: disposeBag)
     }
 }

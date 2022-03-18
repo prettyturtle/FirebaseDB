@@ -69,7 +69,27 @@ struct FirestoreManager {
         return itemListSubject
     }
     
-//    func updateItem(id: String) -> Item {
-//
-//    }
+    func updateItem(
+        id: String,
+        name: String,
+        price: Int,
+        count: Int,
+        description: String
+    ) {
+        db.collection(CollectionType.upload.name)
+            .document(id)
+            .updateData(
+                [
+                    "name": name,
+                    "price": price,
+                    "count": count,
+                    "description": description
+                ]) { error in
+                    if let error = error {
+                        print(error.localizedDescription)
+                    } else {
+                        print("상품 수정 완료!!")
+                    }
+                }
+    }
 }
