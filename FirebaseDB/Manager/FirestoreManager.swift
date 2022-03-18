@@ -68,4 +68,8 @@ struct FirestoreManager {
             }
         return itemListSubject
     }
+    
+//    func updateItem(id: String) -> Item {
+//
+//    }
 }

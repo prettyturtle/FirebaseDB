@@ -52,8 +52,7 @@ class ItemListViewController: UIViewController {
             .disposed(by: disposeBag)
         viewModel.moveToDetailVC
             .subscribe(onNext: { [weak self] item in
-                let itemDetailVC = ItemDetailViewController()
-                itemDetailVC.item = item
+                let itemDetailVC = ItemDetailViewController(item: item)
                 self?.show(itemDetailVC, sender: nil)
             })
             .disposed(by: disposeBag)

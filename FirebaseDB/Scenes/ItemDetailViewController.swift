@@ -7,30 +7,56 @@
 
 import UIKit
 import SnapKit
+import RxSwift
+import RxCocoa
 
 class ItemDetailViewController: UIViewController {
     
-    var item: Item?
+    let disposeBag = DisposeBag()
+    let itemDetailViewModel = ItemDetailViewModel()
+    
+    let item: Item
     
     private let itemImageView = UIImageView()
     private let nameLabel = UILabel()
     private let priceLabel = UILabel()
     private let countLabel = UILabel()
     private let descriptionLabel = UILabel()
+    private let modifyButton = UIBarButtonItem()
+    
+    init(item: Item) {
+        self.item = item
+        super.init(nibName: nil, bundle: nil)
+    }
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setupNavigationItem()
         setupLayout()
         setupAttribute()
+        bind(viewModel: itemDetailViewModel)
     }
-    
+    func bind(viewModel: ItemDetailViewModel) {
+        modifyButton.rx.tap
+            .compactMap { [weak self] _ in self?.item }
+            .bind(to: viewModel.didTapModifyButton)
+            .disposed(by: disposeBag)
+    }
 }
 
 private extension ItemDetailViewController {
+    func setupNavigationItem() {
+        navigationController?.navigationBar.topItem?.backButtonTitle = ""
+        modifyButton.image = UIImage(systemName: "square.and.pencil")
+        navigationItem.rightBarButtonItem = modifyButton
+    }
+    
     func setupAttribute() {
         view.backgroundColor = .systemBackground
         
-        guard let item = item else { return }
         title = item.name
         itemImageView.backgroundColor = .separator
         nameLabel.text = item.name
