@@ -11,20 +11,17 @@ class TabBarController: UITabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        let uploadVC = UINavigationController(rootViewController: UploadViewController())
-        let itemListVC = UINavigationController(rootViewController: ItemListViewController())
+        let tabBarItems: [UIViewController] = TabBarItem.allCases
+            .map { tabBarCase in
+                let vc = tabBarCase.vc
+                vc.tabBarItem = UITabBarItem(
+                    title: tabBarCase.title,
+                    image: tabBarCase.icon.image,
+                    selectedImage: tabBarCase.icon.selected
+                )
+                return vc
+            }
         
-        uploadVC.tabBarItem = UITabBarItem(
-            title: "등록",
-            image: UIImage(systemName: "plus.circle"),
-            selectedImage: UIImage(systemName: "plus.circle.fill")
-        )
-        itemListVC.tabBarItem = UITabBarItem(
-            title: "목록",
-            image: UIImage(systemName: "list.bullet"),
-            selectedImage: UIImage(systemName: "list.bullet.indent")
-        )
-        
-        viewControllers = [uploadVC, itemListVC]
+        viewControllers = tabBarItems
     }
 }
