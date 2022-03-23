@@ -8,22 +8,14 @@
 import UIKit
 
 extension UITextField {
-    enum Style {
-        case name
-        case price
-    }
-    func defaultStyle(_ style: Style) {
+    func defaultStyle(_ style: FormStyle) {
         self.borderStyle = .roundedRect
         self.heightAnchor.constraint(equalToConstant: 36.0).isActive = true
         self.font = .systemFont(ofSize: 14.0, weight: .regular)
         self.autocapitalizationType = .none
         self.autocorrectionType = .no
-        
-        switch style {
-        case .name:
-            self.placeholder = "상품명을 입력하세요."
-        case .price:
-            self.placeholder = "가격을 입력하세요."
+        self.placeholder = "\(style.text)을 입력하세요."
+        if style == .price {
             self.keyboardType = .numberPad
         }
     }

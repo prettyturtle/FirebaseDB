@@ -10,11 +10,7 @@ import Firebase
 import RxSwift
 
 struct FirestoreManager {
-    enum CollectionType: String {
-        case upload = "UploadedItems"
-        
-        var name: String { self.rawValue }
-    }
+    
     private let db = Firestore.firestore()
     
     func uploadItem(item: Item) {

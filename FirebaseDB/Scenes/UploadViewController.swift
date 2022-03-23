@@ -10,11 +10,6 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-enum UploadMode {
-    case new
-    case modify
-}
-
 class UploadViewController: UIViewController {
     
     let disposeBag = DisposeBag()
