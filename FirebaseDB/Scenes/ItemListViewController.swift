@@ -33,6 +33,7 @@ class ItemListViewController: UIViewController {
             .bind(to: viewModel.selectedRow)
             .disposed(by: disposeBag)
         
+        viewModel.fetchUploadedItems()
         viewModel.itemList
             .bind(to: itemTableView.rx.items) { tv, row, data in
                 guard let cell = tv.dequeueReusableCell(

@@ -21,8 +21,6 @@ class ItemListViewModel {
     let moveToDetailVC = PublishSubject<Item>()
     
     init() {
-        fetchUploadedItems()
-        
         refreshBegin
             .subscribe(onNext: { [weak self] _ in
                 self?.fetchUploadedItems()
