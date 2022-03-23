@@ -13,8 +13,14 @@ enum TabBarItem: CaseIterable {
     
     var vc: UIViewController {
         switch self {
-        case .upload: return UINavigationController(rootViewController: UploadViewController())
-        case .itemList: return UINavigationController(rootViewController: ItemListViewController())
+        case .upload:
+            let rootVC = UploadViewController()
+            rootVC.bind(viewModel: UploadViewModel())
+            return UINavigationController(rootViewController: rootVC)
+        case .itemList:
+            let rootVC = ItemListViewController()
+            rootVC.bind(viewModel: ItemListViewModel())
+            return UINavigationController(rootViewController: rootVC)
         }
     }
     var title: String {

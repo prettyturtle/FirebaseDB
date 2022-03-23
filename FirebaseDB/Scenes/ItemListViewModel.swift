@@ -13,6 +13,7 @@ class ItemListViewModel {
     
     let disposeBag = DisposeBag()
     let FIRManager = FirestoreManager()
+    let itemDetailViewModel = ItemDetailViewModel()
     
     let itemList = BehaviorSubject<[Item]>(value: [])
     let refreshBegin = PublishRelay<Void>()

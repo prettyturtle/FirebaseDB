@@ -12,6 +12,7 @@ import RxCocoa
 class ItemDetailViewModel {
     
     let disposeBag = DisposeBag()
+    let uploadViewModel = UploadViewModel()
     
     let didTapModifyButton = PublishSubject<Item>()
     let moveToUploadViewController = PublishSubject<UploadViewController>()
@@ -21,6 +22,8 @@ class ItemDetailViewModel {
                 let uploadVC = UploadViewController()
                 uploadVC.item = item
                 uploadVC.uploadMode = .modify
+                uploadVC.setupModifyView(item: item)
+                uploadVC.bind(viewModel: self.uploadViewModel)
                 return uploadVC
             }
             .bind(to: moveToUploadViewController)

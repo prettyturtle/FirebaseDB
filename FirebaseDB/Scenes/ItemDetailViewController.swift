@@ -13,7 +13,6 @@ import RxCocoa
 class ItemDetailViewController: UIViewController {
     
     let disposeBag = DisposeBag()
-    let itemDetailViewModel = ItemDetailViewModel()
     
     let item: Item
     
@@ -37,7 +36,6 @@ class ItemDetailViewController: UIViewController {
         setupNavigationItem()
         setupLayout()
         setupAttribute()
-        bind(viewModel: itemDetailViewModel)
     }
     func bind(viewModel: ItemDetailViewModel) {
         modifyButton.rx.tap
@@ -65,6 +63,7 @@ private extension ItemDetailViewController {
         
         title = item.name
         itemImageView.backgroundColor = .separator
+        descriptionLabel.numberOfLines = 0
         nameLabel.text = item.name
         priceLabel.text = item.price.decimal + "원"
         countLabel.text = "\(item.count)개"

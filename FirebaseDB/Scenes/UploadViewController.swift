@@ -13,7 +13,6 @@ import RxCocoa
 class UploadViewController: UIViewController {
     
     let disposeBag = DisposeBag()
-    let uploadViewModel = UploadViewModel()
     
     var item: Item?
     var uploadMode: UploadMode = .new
@@ -38,12 +37,6 @@ class UploadViewController: UIViewController {
         super.viewDidLoad()
         setupAttribute()
         setupLayout()
-        
-        if uploadMode == .modify,
-           let item = item {
-            setupModifyView(item: item)
-        }
-        bind(viewModel: uploadViewModel)
     }
     
     func bind(viewModel: UploadViewModel) {
@@ -63,24 +56,18 @@ class UploadViewController: UIViewController {
             .bind(to: viewModel.didTapUploadBarButton)
             .disposed(by: disposeBag)
     }
-}
-
-private extension UploadViewController {
     func setupModifyView(item: Item) {
-        title = "상품 수정"
-        uploadBarButton.title = "수정"
-        
         nameTextField.text = item.name
         priceTextField.text = "\(item.price)"
         countStepper.value = Double(item.count)
         currentCountLabel.text = "\(item.count)개"
         descriptionTextView.text = item.description
     }
+}
+
+private extension UploadViewController {
     func setupAttribute() {
-        title = "상품 등록"
-        uploadBarButton.title = "등록"
-        navigationItem.rightBarButtonItem = uploadBarButton
-        
+        setupNavigationBar()
         scrollView.showsVerticalScrollIndicator = false
         scrollView.alwaysBounceVertical = true
         
@@ -173,5 +160,18 @@ private extension UploadViewController {
             $0.leading.trailing.equalToSuperview().inset(commonInset)
             $0.bottom.equalToSuperview().inset(commonInset)
         }
+    }
+    func setupNavigationBar() {
+        switch uploadMode {
+        case .new:
+            title = "상품 등록"
+            uploadBarButton.title = "등록"
+        case .modify:
+            title = "상품 수정"
+            uploadBarButton.title = "수정"
+        }
+        
+        navigationItem.rightBarButtonItem = uploadBarButton
+        navigationController?.navigationBar.topItem?.backButtonTitle = ""
     }
 }

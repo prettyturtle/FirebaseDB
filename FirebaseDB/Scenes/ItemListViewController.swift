@@ -12,7 +12,6 @@ import RxSwift
 class ItemListViewController: UIViewController {
     
     let disposeBag = DisposeBag()
-    let itemListViewModel = ItemListViewModel()
     
     private let itemTableView = UITableView()
     private let refreshControl = UIRefreshControl()
@@ -21,7 +20,6 @@ class ItemListViewController: UIViewController {
         super.viewDidLoad()
         setupLayout()
         setupAttribute()
-        bind(viewModel: itemListViewModel)
     }
     
     func bind(viewModel: ItemListViewModel) {
@@ -54,6 +52,7 @@ class ItemListViewController: UIViewController {
         viewModel.moveToDetailVC
             .subscribe(onNext: { [weak self] item in
                 let itemDetailVC = ItemDetailViewController(item: item)
+                itemDetailVC.bind(viewModel: viewModel.itemDetailViewModel)
                 self?.show(itemDetailVC, sender: nil)
             })
             .disposed(by: disposeBag)
