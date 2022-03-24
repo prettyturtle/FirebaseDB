@@ -5,10 +5,11 @@
 //  Created by yc on 2022/03/12.
 //
 
-import Foundation
+import UIKit
 import RxSwift
 import RxRelay
 import Firebase
+import PhotosUI
 
 class UploadViewModel {
     let disposeBag = DisposeBag()
@@ -26,6 +27,9 @@ class UploadViewModel {
         description: ""
     ))
     let didTapUploadBarButton = PublishRelay<(UploadMode, Item?)>()
+    let didTapImageSelectButton = PublishRelay<Void>()
+    let presentToImagePicker = PublishSubject<PHPickerViewController>()
+    let selectedImage = PublishSubject<UIImage>()
     
     init() {
         // New Upload
@@ -53,5 +57,35 @@ class UploadViewModel {
                 )
             })
             .disposed(by: disposeBag)
+        
+        didTapImageSelectButton
+            .map {
+                let pickerConfiguration = PHPickerConfiguration()
+                let imagePicker = PHPickerViewController(configuration: pickerConfiguration)
+                imagePicker.delegate = self
+                return imagePicker
+            }
+            .bind(to: self.presentToImagePicker)
+            .disposed(by: disposeBag)
+    }
+}
+
+extension UploadViewModel: PHPickerViewControllerDelegate {
+    func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
+        picker.dismiss(animated: true)
+        
+        let itemProvider = results.first?.itemProvider
+        
+        if let itemProvider = itemProvider,
+           itemProvider.canLoadObject(ofClass: UIImage.self) {
+            itemProvider.loadObject(ofClass: UIImage.self) { image, error in
+                if let image = image as? UIImage {
+                    self.selectedImage.onNext(image)
+                }
+                if let error = error {
+                    print("UploadViewModel - PHPickerViewControllerDelegate - picker - error : \(error.localizedDescription)")
+                }
+            }
+        }
     }
 }

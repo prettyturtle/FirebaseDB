@@ -21,7 +21,7 @@ class UploadViewController: UIViewController {
     private let contentView = UIView()
     
     private let uploadBarButton = UIBarButtonItem()
-    private let itemImage = UIImageView()
+    private let itemImageSelectButton = UIButton()
     private let nameLabel = UILabel()
     private let nameTextField = UITextField()
     private let priceLabel = UILabel()
@@ -55,6 +55,25 @@ class UploadViewController: UIViewController {
             .map { [weak self] mode in (mode, self?.item)}
             .bind(to: viewModel.didTapUploadBarButton)
             .disposed(by: disposeBag)
+        itemImageSelectButton.rx.tap
+            .bind(to: viewModel.didTapImageSelectButton)
+            .disposed(by: disposeBag)
+        
+        viewModel.presentToImagePicker
+            .subscribe(onNext: {
+                self.present($0, animated: true)
+            })
+            .disposed(by: disposeBag)
+        
+        viewModel.selectedImage
+            .observe(on: MainScheduler.instance)
+            .map { [weak self] image in
+                self?.itemImageSelectButton.setTitle("", for: .normal)
+                return image
+            }
+            .observe(on: ConcurrentMainScheduler.instance)
+            .bind(to: itemImageSelectButton.rx.backgroundImage())
+            .disposed(by: disposeBag)
     }
     func setupModifyView(item: Item) {
         nameTextField.text = item.name
@@ -77,8 +96,11 @@ private extension UploadViewController {
         wonLabel.text = "원"
         countLabel.fieldLabelStyle(.count)
         descriptionLabel.fieldLabelStyle(.description)
-        itemImage.backgroundColor = .secondarySystemBackground
-        itemImage.layer.cornerRadius = 4.0
+        itemImageSelectButton.setTitle("사진을 선택하세요.", for: .normal)
+        itemImageSelectButton.setTitleColor(.systemPink, for: .normal)
+        itemImageSelectButton.titleLabel?.font = .systemFont(ofSize: 14.0, weight: .regular)
+        itemImageSelectButton.backgroundColor = .secondarySystemBackground
+        itemImageSelectButton.layer.cornerRadius = 4.0
         nameTextField.defaultStyle(.name)
         priceTextField.defaultStyle(.price)
         currentCountLabel.font = .systemFont(ofSize: 14.0, weight: .regular)
@@ -98,7 +120,7 @@ private extension UploadViewController {
             $0.width.equalToSuperview()
         }
         [
-            itemImage,
+            itemImageSelectButton,
             nameLabel,
             nameTextField,
             priceLabel,
@@ -113,13 +135,13 @@ private extension UploadViewController {
         
         let commonInset = 16.0
         
-        itemImage.snp.makeConstraints {
+        itemImageSelectButton.snp.makeConstraints {
             $0.size.equalTo(commonInset*8)
             $0.top.equalToSuperview().inset(commonInset)
             $0.centerX.equalToSuperview()
         }
         nameLabel.snp.makeConstraints {
-            $0.top.equalTo(itemImage.snp.bottom).offset(commonInset)
+            $0.top.equalTo(itemImageSelectButton.snp.bottom).offset(commonInset)
             $0.leading.trailing.equalToSuperview().inset(commonInset)
         }
         nameTextField.snp.makeConstraints {
