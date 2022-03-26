@@ -9,6 +9,7 @@ import Foundation
 
 struct Item: Codable {
     var id: String = UUID().uuidString
+    let imageURL: String
     let name: String
     let price: Int
     let count: Int

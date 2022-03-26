@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import Kingfisher
 
 class ItemDetailViewController: UIViewController {
     
@@ -64,6 +65,7 @@ private extension ItemDetailViewController {
         title = item.name
         itemImageView.backgroundColor = .separator
         descriptionLabel.numberOfLines = 0
+        itemImageView.kf.setImage(with: URL(string: item.imageURL))
         nameLabel.text = item.name
         priceLabel.text = item.price.decimal + "원"
         countLabel.text = "\(item.count)개"

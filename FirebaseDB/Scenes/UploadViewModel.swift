@@ -30,13 +30,24 @@ class UploadViewModel {
     let didTapImageSelectButton = PublishRelay<Void>()
     let presentToImagePicker = PublishSubject<PHPickerViewController>()
     let selectedImage = PublishSubject<UIImage>()
+    let savedImageURLInStorage = PublishSubject<String>()
     
     init() {
+        let itemInfoObservable = Observable.combineLatest(savedImageURLInStorage, itemInfoInput)
+        
         // New Upload
         didTapUploadBarButton
-            .filter { $0.0 == .new }
-            .withLatestFrom(itemInfoInput)
-            .map { Item(name: $0, price: $1, count: $2, description: $3) }
+            .withLatestFrom(selectedImage)
+            .map { self.FIRManager.uploadImageInStorage(id: UUID().uuidString, image: $0) }
+            .map { $0.bind(to: self.savedImageURLInStorage).disposed(by: self.disposeBag) }
+            .subscribe(onNext: { _ in
+                print("사진 저장!!")
+            })
+            .disposed(by: disposeBag)
+        
+        savedImageURLInStorage
+            .withLatestFrom(itemInfoObservable)
+            .map { Item(imageURL: $0, name: $1.name, price: $1.price, count: $1.count, description: $1.description) }
             .subscribe(onNext: { [weak self] item in
                 self?.FIRManager.uploadItem(item: item)
             })

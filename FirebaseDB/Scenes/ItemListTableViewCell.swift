@@ -7,6 +7,7 @@
 
 import UIKit
 import SnapKit
+import Kingfisher
 
 class ItemListTableViewCell: UITableViewCell {
     
@@ -21,6 +22,7 @@ class ItemListTableViewCell: UITableViewCell {
         setupLayout()
         setupAttribute()
         
+        itemImageView.kf.setImage(with: URL(string: item.imageURL))
         nameLabel.text = item.name
         priceLabel.text = item.price.decimal + "원"
         countLabel.text = "\(item.count)개"
