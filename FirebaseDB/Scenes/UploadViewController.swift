@@ -23,6 +23,7 @@ class UploadViewController: UIViewController {
     
     private let uploadBarButton = UIBarButtonItem()
     private let itemImageSelectButton = UIButton()
+    private let removeImageButton = UIButton()
     private let nameLabel = UILabel()
     private let nameTextField = UITextField()
     private let priceLabel = UILabel()
@@ -59,17 +60,29 @@ class UploadViewController: UIViewController {
         itemImageSelectButton.rx.tap
             .bind(to: viewModel.didTapImageSelectButton)
             .disposed(by: disposeBag)
+        removeImageButton.rx.tap
+            .map { [weak self] in
+                self?.itemImageSelectButton.setTitle("사진을 선택하세요.", for: .normal)
+                self?.itemImageSelectButton.setTitleColor(.systemPink, for: .normal)
+                self?.itemImageSelectButton.titleLabel?.font = .systemFont(ofSize: 14.0, weight: .regular)
+                self?.itemImageSelectButton.setBackgroundImage(nil, for: .normal)
+            }
+            .map { nil }
+            .bind(to: viewModel.didTapRemoveImageButton)
+            .disposed(by: disposeBag)
         
         viewModel.presentToImagePicker
-            .subscribe(onNext: {
-                self.present($0, animated: true)
+            .subscribe(onNext: { [weak self] in
+                self?.present($0, animated: true)
             })
             .disposed(by: disposeBag)
         
         viewModel.selectedImage
             .observe(on: MainScheduler.instance)
             .map { [weak self] image in
-                self?.itemImageSelectButton.setTitle("", for: .normal)
+                if image != nil {
+                    self?.itemImageSelectButton.setTitle("", for: .normal)
+                }
                 return image
             }
             .compactMap { $0 }
@@ -104,6 +117,11 @@ private extension UploadViewController {
         itemImageSelectButton.titleLabel?.font = .systemFont(ofSize: 14.0, weight: .regular)
         itemImageSelectButton.backgroundColor = .secondarySystemBackground
         itemImageSelectButton.layer.cornerRadius = 4.0
+        removeImageButton.setTitle("사진 삭제", for: .normal)
+        removeImageButton.setTitleColor(.white, for: .normal)
+        removeImageButton.titleLabel?.font = .systemFont(ofSize: 14.0, weight: .medium)
+        removeImageButton.backgroundColor = .systemPink
+        removeImageButton.layer.cornerRadius = 4.0
         nameTextField.defaultStyle(.name)
         priceTextField.defaultStyle(.price)
         currentCountLabel.font = .systemFont(ofSize: 14.0, weight: .regular)
@@ -124,6 +142,7 @@ private extension UploadViewController {
         }
         [
             itemImageSelectButton,
+            removeImageButton,
             nameLabel,
             nameTextField,
             priceLabel,
@@ -142,6 +161,12 @@ private extension UploadViewController {
             $0.size.equalTo(commonInset*8)
             $0.top.equalToSuperview().inset(commonInset)
             $0.centerX.equalToSuperview()
+        }
+        removeImageButton.snp.makeConstraints {
+            $0.leading.equalTo(itemImageSelectButton.snp.trailing).offset(16.0)
+            $0.bottom.equalTo(itemImageSelectButton.snp.bottom)
+            $0.width.equalTo(90.0)
+            $0.height.equalTo(36.0)
         }
         nameLabel.snp.makeConstraints {
             $0.top.equalTo(itemImageSelectButton.snp.bottom).offset(commonInset)

@@ -28,6 +28,7 @@ class UploadViewModel {
     ))
     let didTapUploadBarButton = PublishRelay<(UploadMode, Item?)>()
     let didTapImageSelectButton = PublishRelay<Void>()
+    let didTapRemoveImageButton = PublishRelay<UIImage?>()
     let presentToImagePicker = PublishSubject<PHPickerViewController>()
     let selectedImage = BehaviorSubject<UIImage?>(value: nil)
     let savedImageURLInStorage = PublishSubject<String>()
@@ -93,6 +94,10 @@ class UploadViewModel {
                 return imagePicker
             }
             .bind(to: self.presentToImagePicker)
+            .disposed(by: disposeBag)
+        
+        didTapRemoveImageButton
+            .bind(to: self.selectedImage)
             .disposed(by: disposeBag)
     }
 }

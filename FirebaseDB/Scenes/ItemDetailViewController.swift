@@ -63,7 +63,7 @@ private extension ItemDetailViewController {
         view.backgroundColor = .systemBackground
         
         title = item.name
-        itemImageView.backgroundColor = .separator
+        itemImageView.backgroundColor = .secondarySystemBackground
         descriptionLabel.numberOfLines = 0
         itemImageView.kf.setImage(with: URL(string: item.imageURL))
         nameLabel.text = item.name

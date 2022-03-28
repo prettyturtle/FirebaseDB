@@ -40,6 +40,7 @@ class ItemListViewController: UIViewController {
                 ) as? ItemListTableViewCell else { return UITableViewCell() }
                 
                 cell.setupView(item: data)
+                cell.selectionStyle = .none
                 
                 return cell
             }
