@@ -9,6 +9,7 @@ import UIKit
 import SnapKit
 import RxSwift
 import RxCocoa
+import Kingfisher
 
 class UploadViewController: UIViewController {
     
@@ -71,11 +72,13 @@ class UploadViewController: UIViewController {
                 self?.itemImageSelectButton.setTitle("", for: .normal)
                 return image
             }
+            .compactMap { $0 }
             .observe(on: ConcurrentMainScheduler.instance)
             .bind(to: itemImageSelectButton.rx.backgroundImage())
             .disposed(by: disposeBag)
     }
     func setupModifyView(item: Item) {
+        itemImageSelectButton.kf.setBackgroundImage(with: URL(string: item.imageURL), for: .normal)
         nameTextField.text = item.name
         priceTextField.text = "\(item.price)"
         countStepper.value = Double(item.count)
