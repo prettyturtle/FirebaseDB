@@ -89,6 +89,11 @@ class UploadViewController: UIViewController {
             .observe(on: ConcurrentMainScheduler.instance)
             .bind(to: itemImageSelectButton.rx.backgroundImage())
             .disposed(by: disposeBag)
+        viewModel.showAlert
+            .subscribe(onNext: { [weak self] alert in
+                self?.present(alert, animated: true)
+            })
+            .disposed(by: disposeBag)
     }
     func setupModifyView(item: Item) {
         itemImageSelectButton.kf.setBackgroundImage(with: URL(string: item.imageURL), for: .normal)

@@ -14,6 +14,8 @@ struct FirestoreManager {
     private let db = Firestore.firestore()
     private let storage = Storage.storage()
     
+    let uploadResult = PublishSubject<(String?, Error?)>()
+    
     /// 상품을 업로드 하는 메서드
     ///
     /// 상품의 이미지가 있다면 이미지를 파이어베이스 스토리지에 저장한 후 다운로드 URL을 받아 파이어스토어에 저장
@@ -38,6 +40,7 @@ struct FirestoreManager {
             storageChild.putData(imageData, metadata: metaData) { _, error in
                 if let error = error {
                     print("ERROR - FirestoreManager - 이미지가 있을 때 - uploadItem - putData - \(error.localizedDescription)")
+                    uploadResult.onNext((nil, error))
                     return
                 } else {
                     print("사진 업로드 성공!!")
@@ -45,6 +48,7 @@ struct FirestoreManager {
                     storageChild.downloadURL { url, error in
                         if let error = error {
                             print("ERROR - FirestoreManager - 이미지가 있을 때 - uploadItem - downloadURL - \(error.localizedDescription)")
+                            uploadResult.onNext((nil, error))
                             return
                         }
                         
@@ -71,8 +75,10 @@ struct FirestoreManager {
                                 .setData(documentData) { error in
                                     if let error = error {
                                         print("ERROR - FirestoreManager - 이미지가 있을 때 - uploadItem - setData - \(error.localizedDescription)")
+                                        uploadResult.onNext((nil, error))
                                     } else {
                                         print("상품 업로드 성공!!")
+                                        uploadResult.onNext(("상품 등록 완료!", nil))
                                     }
                                 }
                         }
@@ -101,8 +107,10 @@ struct FirestoreManager {
                 .setData(documentData) { error in
                     if let error = error {
                         print("ERROR - FirestoreManager - 이미지가 없을 때 - save - setData - \(error.localizedDescription)")
+                        uploadResult.onNext((nil, error))
                     } else {
                         print("상품 업로드 성공!!")
+                        uploadResult.onNext(("상품 등록 완료!", nil))
                     }
                 }
         }
@@ -168,6 +176,7 @@ struct FirestoreManager {
             storageChild.putData(imageData, metadata: metaData) { _, error in
                 if let error = error {
                     print("ERROR - FirestoreManager - 이미지가 있을 때 - updateItem - putData - \(error.localizedDescription)")
+                    uploadResult.onNext((nil, error))
                     return
                 } else {
                     print("사진 수정 업로드 성공!!")
@@ -175,6 +184,7 @@ struct FirestoreManager {
                     storageChild.downloadURL { url, error in
                         if let error = error {
                             print("ERROR - FirestoreManager - 이미지가 있을 때 - updateItem - downloadURL - \(error.localizedDescription)")
+                            uploadResult.onNext((nil, error))
                             return
                         }
                         if let url = url {
@@ -191,19 +201,36 @@ struct FirestoreManager {
                                         "description": description
                                     ]) { error in
                                         if let error = error {
-                                            print(error.localizedDescription)
+                                            print("ERROR - FirestoreManager - 이미지가 있을 때 - updateItem - updateData - \(error.localizedDescription)")
+                                            uploadResult.onNext((nil, error))
                                         } else {
                                             print("상품 수정 완료!!")
+                                            uploadResult.onNext(("상품 수정 완료!", nil))
                                         }
                                     }
                         }
                     }
                 }
             }
+        } else { // 이미지가 없을 때
+            db.collection(CollectionType.upload.name)
+                .document(id)
+                .updateData(
+                    [
+                        "imageURL": "",
+                        "name": name,
+                        "price": price,
+                        "count": count,
+                        "description": description
+                    ]) { error in
+                        if let error = error {
+                            print("ERROR - FirestoreManager - 이미지가 없을 때 - updateItem - updateData - \(error.localizedDescription)")
+                            uploadResult.onNext((nil, error))
+                        } else {
+                            print("상품 수정 완료!!")
+                            uploadResult.onNext(("상품 수정 완료!!", nil))
+                        }
+                    }
         }
-        // TODO: - 선택한 이미지를 삭제하는 기능을 만든 뒤 추가
-        // UploadViewController에서 수정하러 진입하면 이미지가 처음에 nil인 상황인데
-        // 진입 시점에 이미지가 있다면 이미지를 UploadViewModel의 selectedImage에 onNext 해줘야한다
-        else { print("이미지 없음") }
     }
 }

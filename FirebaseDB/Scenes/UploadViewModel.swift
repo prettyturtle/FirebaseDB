@@ -32,6 +32,7 @@ class UploadViewModel {
     let presentToImagePicker = PublishSubject<PHPickerViewController>()
     let selectedImage = BehaviorSubject<UIImage?>(value: nil)
     let savedImageURLInStorage = PublishSubject<String>()
+    let showAlert = PublishSubject<UIAlertController>()
     
     init() {
         let itemInfoObservable = Observable.combineLatest(selectedImage, itemInfoInput) { (image: $0, info: $1) }
@@ -98,6 +99,16 @@ class UploadViewModel {
         
         didTapRemoveImageButton
             .bind(to: self.selectedImage)
+            .disposed(by: disposeBag)
+        
+        FIRManager.uploadResult
+            .map { success, _ in
+                let alertController = UIAlertController(title: success, message: nil, preferredStyle: .alert)
+                let okAction = UIAlertAction(title: "OK", style: .default)
+                alertController.addAction(okAction)
+                return alertController
+            }
+            .bind(to: self.showAlert)
             .disposed(by: disposeBag)
     }
 }
