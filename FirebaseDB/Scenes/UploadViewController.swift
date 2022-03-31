@@ -20,6 +20,7 @@ class UploadViewController: UIViewController {
     
     private let scrollView = UIScrollView()
     private let contentView = UIView()
+    private let tapGesture = UITapGestureRecognizer()
     
     private let uploadBarButton = UIBarButtonItem()
     private let itemImageSelectButton = UIButton()
@@ -105,6 +106,13 @@ class UploadViewController: UIViewController {
     }
 }
 
+// MARK: - @objc func
+extension UploadViewController {
+    @objc func didTapScrollView() {
+        view.endEditing(true)
+    }
+}
+
 private extension UploadViewController {
     func setupAttribute() {
         setupNavigationBar()
@@ -134,6 +142,9 @@ private extension UploadViewController {
         countStepper.value = 1
         countStepper.minimumValue = 1
         descriptionTextView.defaultStyle()
+        
+        tapGesture.addTarget(self, action: #selector(didTapScrollView))
+        scrollView.addGestureRecognizer(tapGesture)
     }
     func setupLayout() {
         view.addSubview(scrollView)
