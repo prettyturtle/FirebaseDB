@@ -9,6 +9,10 @@ import UIKit
 import SnapKit
 import Kingfisher
 
+protocol ItemListTableViewCellDelegate: AnyObject {
+    func didLongPress(item: Item)
+}
+
 class ItemListTableViewCell: UITableViewCell {
     
     static let identifier = "ItemListTableViewCell"
@@ -17,8 +21,15 @@ class ItemListTableViewCell: UITableViewCell {
     private let nameLabel = UILabel()
     private let priceLabel = UILabel()
     private let countLabel = UILabel()
+    private let longPressGesture = UILongPressGestureRecognizer()
     
-    func setupView(item: Item) {
+    var item: Item?
+    
+    weak var delegate: ItemListTableViewCellDelegate?
+    
+    func setupView() {
+        guard let item = item else { return }
+
         setupLayout()
         setupAttribute()
         
@@ -28,10 +39,11 @@ class ItemListTableViewCell: UITableViewCell {
         countLabel.text = "\(item.count)개"
     }
     
-    
     private func setupAttribute() {
         itemImageView.backgroundColor = .secondarySystemBackground
         itemImageView.layer.cornerRadius = 4.0
+        longPressGesture.addTarget(self, action: #selector(didLongPressCell(_:)))
+        self.addGestureRecognizer(longPressGesture)
     }
     private func setupLayout() {
         [
@@ -63,5 +75,14 @@ class ItemListTableViewCell: UITableViewCell {
             $0.trailing.equalToSuperview().inset(commonInset)
         }
         
+    }
+}
+
+// MARK: - @objc func
+extension ItemListTableViewCell {
+    @objc func didLongPressCell(_ sender: UILongPressGestureRecognizer) {
+        guard sender.state == .began,
+              let item = item else { return }
+        delegate?.didLongPress(item: item)
     }
 }

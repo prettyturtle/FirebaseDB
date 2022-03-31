@@ -8,6 +8,7 @@
 import UIKit
 import SnapKit
 import RxSwift
+import RxCocoa
 
 class ItemListViewController: UIViewController {
     
@@ -15,6 +16,7 @@ class ItemListViewController: UIViewController {
     
     private let itemTableView = UITableView()
     private let refreshControl = UIRefreshControl()
+    let deleteItem = PublishSubject<Item>()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -30,6 +32,10 @@ class ItemListViewController: UIViewController {
             .map { $0.row }
             .bind(to: viewModel.selectedRow)
             .disposed(by: disposeBag)
+        deleteItem        
+            .map(viewModel.FIRManager.deleteItem(item:))
+            .bind(to: viewModel.refreshBegin)
+            .disposed(by: disposeBag)
         
         viewModel.fetchUploadedItems()
         viewModel.itemList
@@ -39,7 +45,9 @@ class ItemListViewController: UIViewController {
                     for: IndexPath(row: row, section: 0)
                 ) as? ItemListTableViewCell else { return UITableViewCell() }
                 
-                cell.setupView(item: data)
+                cell.delegate = self
+                cell.item = data
+                cell.setupView()
                 cell.selectionStyle = .none
                 
                 return cell
@@ -57,6 +65,31 @@ class ItemListViewController: UIViewController {
                 self?.show(itemDetailVC, sender: nil)
             })
             .disposed(by: disposeBag)
+    }
+}
+
+extension ItemListViewController: ItemListTableViewCellDelegate {
+    func didLongPress(item: Item) {
+        let alertController = UIAlertController(
+            title: "삭제?",
+            message: nil,
+            preferredStyle: .alert
+        )
+        let cancelAction = UIAlertAction(
+            title: "CANCEL",
+            style: .cancel
+        )
+        let okAction = UIAlertAction(
+            title: "OK",
+            style: .default
+        ) { [weak self] action in
+            self?.deleteItem.onNext(item)
+        }
+        [
+            cancelAction,
+            okAction
+        ].forEach { alertController.addAction($0) }
+        present(alertController, animated: true)
     }
 }
 

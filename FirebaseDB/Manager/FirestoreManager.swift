@@ -233,4 +233,16 @@ struct FirestoreManager {
                     }
         }
     }
+    
+    func deleteItem(item: Item) {
+        db.collection(CollectionType.upload.name)
+            .document(item.id)
+            .delete { error in
+                if let error = error {
+                    print("ERROR - FirestoreManager - deleteItem - \(error.localizedDescription)")
+                } else {
+                    print("삭제 성공!!")
+                }
+            }
+    }
 }
